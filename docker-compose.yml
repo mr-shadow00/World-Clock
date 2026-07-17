@@ -1,0 +1,31 @@
+name: world-clock
+services:
+  world-clock:
+    image: node:20-alpine
+    container_name: world-clock
+    restart: unless-stopped
+    working_dir: /app
+    command: ["node", "server.js"]
+    environment:
+      - PORT=8080
+      - DATA_DIR=/data
+    ports:
+      - target: 8080
+        published: "8089"
+        protocol: tcp
+    volumes:
+      - type: bind
+        source: /DATA/AppData/world-clock/app
+        target: /app
+      - type: bind
+        source: /DATA/AppData/world-clock/data
+        target: /data
+    x-casaos:
+      author: self
+      category: self
+      hostname: ""
+      icon: ""
+      index: /
+      is_uncontrolled: false
+      port_map: "8089"
+      scheme: http
