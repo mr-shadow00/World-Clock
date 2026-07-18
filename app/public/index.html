@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>World Clock</title>
+<meta name="description" content="Time in every city that matters to you, synced from multiple time servers." />
+<meta name="theme-color" content="#0b0e1f" />
+<link rel="manifest" href="manifest.webmanifest" />
+<link rel="icon" href="icons/icon-192.png" />
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="World Clock" />
+<link rel="stylesheet" href="styles.css" />
+<script>
+  (function () {
+    try {
+      var saved = localStorage.getItem('wc-theme');
+      if (saved === 'light' || saved === 'dark') {
+        document.documentElement.setAttribute('data-theme', saved);
+      }
+    } catch (e) {}
+  })();
+</script>
+</head>
+<body>
+  <div class="stars" id="stars" aria-hidden="true"></div>
+
+  <div class="app" id="app">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 40 40" width="26" height="26">
+            <circle cx="20" cy="20" r="17" fill="none" stroke="var(--accent-gold)" stroke-width="2.4"/>
+            <path d="M20 20 L20 9" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/>
+            <path d="M20 20 L27 24" stroke="var(--accent-teal)" stroke-width="2.4" stroke-linecap="round"/>
+          </svg>
+        </span>
+        <h1>World Clock</h1>
+      </div>
+      <div class="topbar-actions">
+        <button class="sync-pill" id="syncPill" type="button" title="Sync status">
+          <span class="sync-dot" id="syncDot"></span>
+          <span id="syncText">Syncing…</span>
+        </button>
+        <button class="icon-btn" id="themeBtn" title="Toggle theme" aria-label="Toggle theme">◐</button>
+        <div class="menu-wrap">
+          <button class="icon-btn" id="menuBtn" title="More" aria-label="More options">⋯</button>
+          <div class="popover" id="menuPopover" hidden>
+            <button data-action="addAll">Add all timezones</button>
+            <button data-action="removeAll" class="popover-danger">Remove all timezones</button>
+            <button data-action="refresh">Force re-sync</button>
+            <button data-action="export">Export backup</button>
+            <label class="popover-file">
+              Import backup
+              <input type="file" id="importFile" accept="application/json" hidden />
+            </label>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="clock-grid" id="clockGrid" aria-live="polite"></main>
+
+    <div class="empty-state" id="emptyState" hidden>
+      <p>No clocks yet</p>
+      <span>Tap the + button to add a city</span>
+    </div>
+
+    <button class="fab" id="addBtn" title="Add a clock" aria-label="Add a clock">+</button>
+  </div>
+
+
+  <!-- Sync detail sheet -->
+  <div class="sheet-backdrop" id="syncBackdrop" hidden>
+    <div class="sheet" id="syncSheet" role="dialog" aria-label="Time sync detail">
+      <div class="sheet-handle"></div>
+      <h2>Time sync</h2>
+      <p class="sheet-sub" id="syncSummary"></p>
+      <div class="source-list" id="sourceList"></div>
+      <button class="btn-primary" id="syncNowBtn">Re-sync now</button>
+      <button class="btn-ghost" data-close="sync">Close</button>
+    </div>
+  </div>
+
+  <!-- Add clock sheet -->
+  <div class="sheet-backdrop" id="addBackdrop" hidden>
+    <div class="sheet" id="addSheet" role="dialog" aria-label="Add a clock">
+      <div class="sheet-handle"></div>
+      <h2>Add a clock</h2>
+      <input type="search" id="tzSearch" placeholder="Search city or region…" autocomplete="off" />
+      <button class="btn-primary" id="addAllBtn">Add all timezones</button>
+      <div class="tz-list" id="tzList"></div>
+      <button class="btn-ghost" data-close="add">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Rename sheet -->
+  <div class="sheet-backdrop" id="renameBackdrop" hidden>
+    <div class="sheet" id="renameSheet" role="dialog" aria-label="Rename clock">
+      <div class="sheet-handle"></div>
+      <h2>Rename clock</h2>
+      <input type="text" id="renameInput" placeholder="Label" maxlength="40" />
+      <button class="btn-primary" id="renameSaveBtn">Save</button>
+      <button class="btn-danger" id="renameDeleteBtn">Remove clock</button>
+      <button class="btn-ghost" data-close="rename">Cancel</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" hidden></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
