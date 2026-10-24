@@ -1,4 +1,4 @@
-const CACHE = 'world-clock-shell-v1';
+const CACHE = 'world-clock-shell-v15';
 const SHELL_FILES = [
   '/',
   '/index.html',
@@ -42,19 +42,16 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // App shell: cache-first so the UI itself still opens with no connectivity.
+  // App shell: network first, so updates show up immediately; cache is only the offline fallback.
   event.respondWith(
-    caches.match(request).then((cached) => {
-      const fetchPromise = fetch(request)
-        .then((response) => {
-          if (response && response.ok) {
-            const copy = response.clone();
-            caches.open(CACHE).then((cache) => cache.put(request, copy));
-          }
-          return response;
-        })
-        .catch(() => cached);
-      return cached || fetchPromise;
-    })
+    fetch(request)
+      .then((response) => {
+        if (response && response.ok) {
+          const copy = response.clone();
+          caches.open(CACHE).then((cache) => cache.put(request, copy));
+        }
+        return response;
+      })
+      .catch(() => caches.match(request))
   );
 });

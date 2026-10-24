@@ -212,13 +212,60 @@ body {
 }
 .icon-btn:hover { background: var(--icon-btn-bg-hover); transform: translateY(-1px); }
 
-/* ---------- Grid search ---------- */
+/* ---------- Tabs ---------- */
 
+.tabs {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  margin: 0 2px 14px;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 999px;
+}
+.tab {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 999px;
+  background: none;
+  color: var(--muted);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.tab svg { fill: none; }
+.tab:hover { color: var(--ink); }
+.tab.active { background: var(--accent-gold); color: #1a1200; }
+.tab-count {
+  font-family: 'Plex Mono', ui-monospace, monospace;
+  font-size: 11px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: rgba(127, 127, 160, 0.22);
+}
+.tab.active .tab-count { background: rgba(26, 18, 0, 0.18); }
+
+/* ---------- Search + time-travel toggle ---------- */
+
+.search-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin: 0 2px 16px;
+}
 .grid-search {
   position: relative;
   display: flex;
   align-items: center;
-  margin: 0 2px 16px;
+  flex: 1;
+  min-width: 0;
 }
 .grid-search-icon {
   position: absolute;
@@ -258,6 +305,87 @@ body {
   cursor: pointer;
 }
 .grid-search-clear:hover { background: var(--icon-btn-bg-hover); color: var(--ink); }
+
+.travel-toggle {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--glass-border);
+  background: var(--glass);
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+.travel-toggle:hover { background: var(--icon-btn-bg-hover); }
+.travel-toggle.active { border-color: var(--accent-gold); color: var(--accent-gold); }
+
+/* ---------- Time-travel panel ---------- */
+
+.travel {
+  margin: -4px 2px 18px;
+  padding: 16px 18px 14px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--glass-border);
+  background: var(--glass-strong);
+  box-shadow: var(--glass-shadow);
+}
+.travel[hidden] { display: none; }
+.travel-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.travel-readout {
+  font-family: 'Plex Mono', ui-monospace, monospace;
+  font-size: 20px;
+  font-weight: 500;
+}
+.travel-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.travel-reset { padding: 8px 14px; font-size: 13px; flex-shrink: 0; }
+
+.travel input[type="range"] {
+  width: 100%;
+  margin: 4px 0 0;
+  accent-color: var(--accent-gold);
+  cursor: pointer;
+}
+.travel-scale {
+  position: relative;
+  height: 16px;
+  font-size: 11px;
+  color: var(--muted);
+  font-family: 'Plex Mono', ui-monospace, monospace;
+}
+.travel-scale span { position: absolute; top: 0; transform: translateX(-50%); white-space: nowrap; }
+.travel-steps {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+.travel-steps button {
+  flex: 1;
+  padding: 9px 0;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--glass-border);
+  background: var(--icon-btn-bg);
+  color: var(--ink);
+  font-family: 'Plex Mono', ui-monospace, monospace;
+  font-size: 13px;
+  cursor: pointer;
+}
+.travel-steps button:hover { background: var(--icon-btn-bg-hover); }
+
+/* while time-travelling, make it obvious the clocks are not live */
+.travelling .card-time { color: var(--accent-gold); }
 
 /* ---------- Clock grid ---------- */
 
@@ -302,13 +430,61 @@ body {
 
 .card-top {
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
   margin-top: 8px;
   margin-bottom: 2px;
 }
 
-.card-label-group { min-width: 0; }
+.card-label-group { min-width: 0; flex: 1; }
+.card-actions { display: flex; align-items: center; gap: 2px; margin-left: auto; }
+
+.sky-icon {
+  flex-shrink: 0;
+  width: 30px; height: 30px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+}
+.sky-icon.day { color: #ffc531; background: rgba(255, 197, 49, 0.16); }
+.sky-icon.night { color: #b9a8ff; background: rgba(157, 123, 255, 0.18); }
+:root[data-theme="light"] .sky-icon.day { color: #c98a00; }
+:root[data-theme="light"] .sky-icon.night { color: #6a4fd6; }
+
+.pin-btn {
+  display: grid;
+  place-items: center;
+  width: 30px; height: 30px;
+  border: none;
+  border-radius: 8px;
+  background: none;
+  color: var(--muted);
+  cursor: pointer;
+}
+.pin-btn svg { fill: none; transform: rotate(35deg); transition: transform 0.15s ease; }
+.pin-btn:hover { background: var(--icon-btn-bg-hover); color: var(--ink); }
+.pin-btn.on { color: var(--accent-gold); }
+.pin-btn.on svg { fill: currentColor; transform: rotate(0deg); }
+
+.clock-card.is-pinned { border-color: rgba(242, 183, 5, 0.35); }
+
+.card-diff {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  background: var(--icon-btn-bg);
+  color: var(--muted);
+}
+.card-diff.ahead { color: var(--accent-teal); background: rgba(66, 232, 224, 0.12); }
+.card-diff.behind { color: var(--accent-violet); background: rgba(157, 123, 255, 0.14); }
+:root[data-theme="light"] .card-diff.ahead { color: #0b8a85; }
+:root[data-theme="light"] .card-diff.behind { color: #5a3fc4; }
+
+
 .card-city {
   font-size: 16px;
   font-weight: 700;
@@ -444,6 +620,7 @@ body {
 }
 .empty-state p { font-size: 17px; font-weight: 700; color: var(--ink); margin: 0 0 4px; }
 .empty-state span { font-size: 13px; }
+.empty-state .btn-ghost { margin-top: 16px; }
 
 .fab {
   position: fixed;
@@ -682,6 +859,11 @@ button:focus-visible, input:focus-visible, .clock-card:focus-visible {
   outline-offset: 2px;
 }
 
+@media (max-width: 520px) {
+  #travelToggleText { display: none; }
+  .travel-toggle.active #travelToggleText { display: inline; }
+  .travel-toggle { padding: 10px 12px; }
+}
 @media (max-width: 420px) {
   .brand h1 { font-size: 19px; }
   .sync-pill span:not(.sync-dot) { display: none; }
@@ -690,3 +872,513 @@ button:focus-visible, input:focus-visible, .clock-card:focus-visible {
 @media (max-width: 340px) {
   .clock-grid { grid-template-columns: 1fr; }
 }
+
+
+/* =====================================================================
+   Royal glass theme — plum-black backdrop, glowing ribbons, frosted cards
+   ===================================================================== */
+@font-face { font-family: 'Montserrat'; src: url('fonts/montserrat-500.woff2') format('woff2'); font-weight: 500; font-display: swap; }
+@font-face { font-family: 'Montserrat'; src: url('fonts/montserrat-700.woff2') format('woff2'); font-weight: 700; font-display: swap; }
+@font-face { font-family: 'Montserrat'; src: url('fonts/montserrat-800.woff2') format('woff2'); font-weight: 800; font-display: swap; }
+
+:root {
+  --bg-color: #1a1030;
+  --bg-image: linear-gradient(160deg, #1f1038 0%, #2b1450 48%, #142448 100%);
+  --glass: rgba(255, 255, 255, 0.09);
+  --glass-strong: rgba(255, 255, 255, 0.10);
+  --glass-border: rgba(255, 255, 255, 0.20);
+  --glass-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+  --ink: #ffffff;
+  --muted: rgba(255, 255, 255, 0.66);
+  --accent-gold: #ffc531;
+  --accent-teal: #4fd8e0;
+  --accent-violet: #d58bff;
+  --accent-pink: #e872c0;
+  --brand-grad: linear-gradient(135deg, #d0589f, #7a3fb8);
+  --radius-lg: 28px;
+}
+:root[data-theme="light"] {
+  --bg-color: #efe6f3;
+  --bg-image: linear-gradient(160deg, #f3e9f7 0%, #e9defa 50%, #dde8f9 100%);
+  --glass: rgba(255, 255, 255, 0.55);
+  --glass-strong: rgba(255, 255, 255, 0.62);
+  --glass-border: rgba(90, 40, 110, 0.14);
+  --glass-shadow: 0 14px 34px rgba(90, 40, 110, 0.16);
+  --ink: #26122e;
+  --muted: rgba(38, 18, 46, 0.62);
+  --accent-teal: #0b8a95;
+}
+
+body, button, input, .sync-pill, .card-time, .card-offset, .tab-count, .travel-readout,
+.travel-scale, .travel-steps button, .tz-row-offset, .source-row-detail {
+  font-family: 'Montserrat', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+.brand h1 { font-weight: 800; letter-spacing: -0.02em; }
+.brand-mark, .sync-pill, .icon-btn, .tabs, .grid-search input[type="search"], .travel-toggle, .travel {
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* frosted glass cards, like the plan card */
+.clock-card {
+  background:
+    linear-gradient(150deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.05) 55%, rgba(120, 170, 255, 0.08)),
+    rgba(40, 20, 55, 0.28);
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  backdrop-filter: blur(18px) saturate(1.2);
+  -webkit-backdrop-filter: blur(18px) saturate(1.2);
+  padding: 20px 20px 18px;
+}
+:root[data-theme="light"] .clock-card { background: linear-gradient(150deg, rgba(255,255,255,0.8), rgba(255,255,255,0.45)); }
+.clock-card.is-pinned { border-color: rgba(232, 114, 192, 0.55); box-shadow: 0 0 0 1px rgba(232, 114, 192, 0.18), var(--glass-shadow); }
+.clock-card.is-local { border-color: rgba(79, 216, 224, 0.55); box-shadow: 0 0 0 1px rgba(79, 216, 224, 0.18), var(--glass-shadow); }
+.card-sky { height: 4px; opacity: 0.9; }
+
+.card-city { font-weight: 800; font-size: 17px; }
+.card-day-rel { color: var(--accent-teal); font-weight: 700; }
+.card-time { font-weight: 800; letter-spacing: -0.03em; }
+.card-time .sec { font-weight: 700; color: var(--muted); }
+.card-offset { color: var(--accent-teal); font-weight: 700; }
+.card-pin { color: var(--accent-teal); border-color: var(--accent-teal); }
+.dial-svg circle:first-child { stroke: rgba(255, 255, 255, 0.28); }
+.dial-svg [data-hand="min"] { stroke: var(--accent-teal); }
+
+.sky-icon.day { color: #ffc531; background: rgba(255, 197, 49, 0.18); }
+.sky-icon.night { color: #d9c8ff; background: rgba(213, 139, 255, 0.2); }
+.pin-btn.on { color: var(--accent-pink); }
+.card-diff.ahead { color: var(--accent-teal); background: rgba(79, 216, 224, 0.14); }
+.card-diff.behind { color: #f2a6dd; background: rgba(232, 114, 192, 0.16); }
+
+/* tabs, buttons, FAB: magenta-to-violet like the ribbons */
+.tab { font-weight: 700; }
+.tab.active { background: var(--brand-grad); color: #fff; box-shadow: 0 6px 18px rgba(208, 88, 159, 0.35); }
+.tab.active .tab-count { background: rgba(255, 255, 255, 0.24); }
+.btn-primary { background: var(--brand-grad); color: #fff; }
+.fab { background: var(--brand-grad); color: #fff; box-shadow: 0 12px 30px rgba(208, 88, 159, 0.45); }
+.travel-toggle.active { border-color: var(--accent-gold); color: var(--accent-gold); }
+.travel input[type="range"] { accent-color: var(--accent-pink); }
+.sync-dot.ok { background: #5be37f; box-shadow: 0 0 8px rgba(91, 227, 127, 0.7); }
+
+.travel, .popover, .sheet {
+  background: rgba(36, 18, 50, 0.72);
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+}
+:root[data-theme="light"] .travel, :root[data-theme="light"] .popover, :root[data-theme="light"] .sheet { background: rgba(255, 255, 255, 0.82); }
+.sheet { border-color: rgba(255, 255, 255, 0.2); }
+
+
+/* ---------- Glossy frames: bright rim light + soft sheen, plain colour behind ---------- */
+.clock-card, .tabs, .travel { position: relative; }
+.clock-card {
+  background:
+    linear-gradient(155deg, rgba(255,255,255,0.20) 0%, rgba(255,255,255,0.07) 38%, rgba(255,255,255,0.03) 100%),
+    rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.10);
+}
+.clock-card::after, .tabs::after, .travel::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.12) 30%, rgba(255,255,255,0.05) 65%, rgba(255,255,255,0.45) 100%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+}
+.clock-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 45%;
+  background: linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0));
+  pointer-events: none;
+}
+:root[data-theme="light"] .clock-card { background: linear-gradient(155deg, rgba(255,255,255,0.9), rgba(255,255,255,0.5)); }
+:root[data-theme="light"] .clock-card::after, :root[data-theme="light"] .tabs::after, :root[data-theme="light"] .travel::after {
+  background: linear-gradient(135deg, rgba(255,255,255,1) 0%, rgba(120,70,160,0.18) 40%, rgba(120,70,160,0.10) 65%, rgba(255,255,255,0.9) 100%);
+}
+
+
+/* =========================== Motion =========================== */
+@keyframes cardIn   { from { opacity: 0; transform: translateY(16px) scale(0.96); } to { opacity: 1; transform: none; } }
+@keyframes cardOut  { to { opacity: 0; transform: scale(0.9); } }
+@keyframes pinPop   { 0% { transform: scale(1); } 40% { transform: scale(1.5) rotate(-18deg); } 100% { transform: scale(1); } }
+@keyframes fadeIn   { from { opacity: 0; } to { opacity: 1; } }
+@keyframes sheetUp  { from { opacity: 0; transform: translateY(40px) scale(0.98); } to { opacity: 1; transform: none; } }
+@keyframes travelIn { from { opacity: 0; transform: translateY(-12px) scaleY(0.94); } to { opacity: 1; transform: none; } }
+@keyframes travelOut{ to { opacity: 0; transform: translateY(-12px) scaleY(0.94); } }
+@keyframes popIn    { from { opacity: 0; transform: translateY(-6px) scale(0.95); } to { opacity: 1; transform: none; } }
+@keyframes toastIn  { from { opacity: 0; transform: translate(-50%, 12px); } to { opacity: 1; transform: translate(-50%, 0); } }
+
+.clock-card.enter { animation: cardIn 0.42s cubic-bezier(0.2, 0.8, 0.2, 1) calc(var(--i, 0) * 45ms) backwards; }
+.clock-card.leaving { animation: cardOut 0.23s ease forwards; pointer-events: none; }
+.pin-btn.pop svg { animation: pinPop 0.45s cubic-bezier(0.3, 1.4, 0.5, 1); }
+.pin-btn:active { transform: scale(0.85); }
+
+/* sliding tab highlight */
+.tab-indicator {
+  position: absolute;
+  top: 4px; bottom: 4px; left: 0;
+  width: 0;
+  border-radius: 999px;
+  background: var(--brand-grad);
+  box-shadow: 0 6px 18px rgba(208, 88, 159, 0.35);
+  pointer-events: none;
+}
+.tab-indicator[data-ready] { transition: transform 0.34s cubic-bezier(0.3, 0.8, 0.3, 1), width 0.34s cubic-bezier(0.3, 0.8, 0.3, 1); }
+.tab { position: relative; z-index: 1; transition: color 0.25s ease, transform 0.15s ease; }
+.tab:active { transform: scale(0.97); }
+.tab.active, .tab.active:hover { background: transparent; box-shadow: none; color: #fff; }
+
+.sheet-backdrop:not([hidden]) { animation: fadeIn 0.2s ease; }
+.sheet-backdrop:not([hidden]) .sheet { animation: sheetUp 0.32s cubic-bezier(0.2, 0.9, 0.3, 1); }
+.travel:not([hidden]) { animation: travelIn 0.3s cubic-bezier(0.2, 0.9, 0.3, 1); transform-origin: top; }
+.travel.closing { animation: travelOut 0.22s ease forwards; }
+.popover:not([hidden]) { animation: popIn 0.16s ease; transform-origin: top right; }
+.empty-state:not([hidden]) { animation: fadeIn 0.35s ease; }
+.toast:not([hidden]) { animation: toastIn 0.25s ease; }
+.travel-toggle, .btn-primary, .btn-ghost, .btn-danger, .travel-steps button { transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.12s ease; }
+.travel-toggle:active, .btn-primary:active, .btn-ghost:active, .travel-steps button:active { transform: scale(0.96); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+
+/* ======= Dark glass cards, modelled on the reference plan card ======= */
+:root {
+  --bg-color: #0b0710;
+  --bg-image: linear-gradient(165deg, #130b1c 0%, #0b0710 55%, #0a0d19 100%);
+  --glass: rgba(255, 255, 255, 0.06);
+  --glass-strong: rgba(24, 14, 34, 0.85);
+  --glass-border: rgba(255, 255, 255, 0.14);
+  --glass-shadow: 0 22px 44px rgba(0, 0, 0, 0.55);
+}
+
+.clock-card {
+  background:
+    radial-gradient(120% 85% at 0% 0%, rgba(196, 92, 164, 0.55) 0%, rgba(196, 92, 164, 0) 62%),
+    radial-gradient(110% 90% at 100% 100%, rgba(112, 156, 208, 0.42) 0%, rgba(112, 156, 208, 0) 64%),
+    linear-gradient(150deg, #3b1a42 0%, #1e1028 52%, #182036 100%);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.38),
+    inset 0 -24px 44px rgba(0, 0, 0, 0.28),
+    0 22px 44px rgba(0, 0, 0, 0.55);
+}
+/* glossy rim: bright on the top-left and bottom-right edges, like glass catching light */
+.clock-card::after, .tabs::after, .travel::after {
+  padding: 1.6px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.18) 28%, rgba(255,255,255,0.06) 62%, rgba(255,255,255,0.6) 100%);
+}
+/* diagonal sheen across the upper part of the glass */
+.clock-card::before {
+  height: 100%;
+  background: linear-gradient(118deg, rgba(255,255,255,0.20) 0%, rgba(255,255,255,0.07) 24%, rgba(255,255,255,0) 46%);
+}
+.clock-card:hover { box-shadow: inset 0 1px 0 rgba(255,255,255,0.45), inset 0 -24px 44px rgba(0,0,0,0.28), 0 26px 50px rgba(0,0,0,0.6); }
+.clock-card.is-pinned { box-shadow: inset 0 1px 0 rgba(255,255,255,0.38), inset 0 -24px 44px rgba(0,0,0,0.28), 0 0 0 1px rgba(232,114,192,0.5), 0 22px 44px rgba(0,0,0,0.55); }
+.clock-card.is-local { box-shadow: inset 0 1px 0 rgba(255,255,255,0.38), inset 0 -24px 44px rgba(0,0,0,0.28), 0 0 0 1px rgba(79,216,224,0.5), 0 22px 44px rgba(0,0,0,0.55); }
+
+.tabs, .grid-search input[type="search"], .travel-toggle, .sync-pill, .icon-btn { background: rgba(255, 255, 255, 0.06); }
+.travel {
+  background:
+    radial-gradient(100% 120% at 0% 0%, rgba(196, 92, 164, 0.28), rgba(196, 92, 164, 0) 60%),
+    linear-gradient(150deg, #2a1432 0%, #170d20 100%);
+}
+.travel-steps button { background: rgba(255, 255, 255, 0.07); }
+
+
+/* ============ Frosted glass over a colour-field background ============ */
+:root {
+  --bg-color: #07050d;
+  --bg-image: none;
+  --glass: rgba(255, 255, 255, 0.08);
+  --glass-strong: rgba(255, 255, 255, 0.10);
+  --glass-border: rgba(255, 255, 255, 0.22);
+  --glass-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+}
+
+/* soft colour fields (no shapes, no patterns) for the glass to pick up */
+.stars {
+  display: block;
+  opacity: 1;
+  background:
+    radial-gradient(46% 38% at 10% 6%,  rgba(255, 60, 165, 0.90), transparent 72%),
+    radial-gradient(44% 36% at 92% 12%, rgba(125, 75, 255, 0.85), transparent 72%),
+    radial-gradient(40% 32% at 52% 48%, rgba(200, 60, 210, 0.40), transparent 72%),
+    radial-gradient(50% 40% at 8% 92%,  rgba(0, 205, 225, 0.70),  transparent 72%),
+    radial-gradient(48% 40% at 94% 90%, rgba(40, 115, 255, 0.80), transparent 72%),
+    #07050d;
+}
+.stars span { display: none; }
+:root[data-theme="light"] .stars {
+  background:
+    radial-gradient(46% 38% at 10% 6%,  rgba(255, 150, 205, 0.85), transparent 72%),
+    radial-gradient(44% 36% at 92% 12%, rgba(175, 150, 255, 0.85), transparent 72%),
+    radial-gradient(50% 40% at 8% 92%,  rgba(120, 225, 235, 0.80), transparent 72%),
+    radial-gradient(48% 40% at 94% 90%, rgba(130, 175, 255, 0.85), transparent 72%),
+    #f1e9f6;
+}
+
+/* the glass itself: translucent, no tint of its own, blurs what is behind it */
+.clock-card {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.17) 0%, rgba(255, 255, 255, 0.06) 55%, rgba(255, 255, 255, 0.09) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(26px) saturate(1.6) brightness(0.92);
+  -webkit-backdrop-filter: blur(26px) saturate(1.6) brightness(0.92);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 16px 40px rgba(0, 0, 0, 0.35);
+}
+.clock-card::before {
+  height: 100%;
+  background: linear-gradient(118deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.04) 26%, rgba(255, 255, 255, 0) 48%);
+}
+.clock-card:hover { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), 0 20px 46px rgba(0, 0, 0, 0.4); }
+.clock-card.is-pinned { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 0 0 1px rgba(255, 130, 205, 0.55), 0 16px 40px rgba(0, 0, 0, 0.35); }
+.clock-card.is-local { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 0 0 1px rgba(90, 225, 235, 0.55), 0 16px 40px rgba(0, 0, 0, 0.35); }
+:root[data-theme="light"] .clock-card { background: linear-gradient(145deg, rgba(255,255,255,0.65), rgba(255,255,255,0.32)); backdrop-filter: blur(26px) saturate(1.5); -webkit-backdrop-filter: blur(26px) saturate(1.5); }
+
+.tabs, .grid-search input[type="search"], .travel-toggle, .sync-pill, .icon-btn, .brand-mark {
+  background: rgba(255, 255, 255, 0.09);
+  backdrop-filter: blur(22px) saturate(1.5);
+  -webkit-backdrop-filter: blur(22px) saturate(1.5);
+}
+.travel {
+  background: linear-gradient(145deg, rgba(255,255,255,0.15), rgba(255,255,255,0.06));
+  backdrop-filter: blur(26px) saturate(1.6) brightness(0.92);
+  -webkit-backdrop-filter: blur(26px) saturate(1.6) brightness(0.92);
+}
+.popover, .sheet {
+  background: rgba(30, 20, 46, 0.55);
+  backdrop-filter: blur(30px) saturate(1.5);
+  -webkit-backdrop-filter: blur(30px) saturate(1.5);
+}
+:root[data-theme="light"] .travel, :root[data-theme="light"] .popover, :root[data-theme="light"] .sheet { background: rgba(255, 255, 255, 0.7); }
+.travel-steps button { background: rgba(255, 255, 255, 0.10); }
+
+
+/* ============ Calm "night & sunlight" palette: ink navy, muted teal, warm amber ============ */
+:root {
+  --bg-color: #070b12;
+  --accent-teal: #66d6cb;
+  --accent-gold: #f2b24d;
+  --accent-pink: #f2b24d;   /* pin + slider accent now amber */
+  --accent-violet: #9fb4ff;
+  --brand-grad: linear-gradient(135deg, #f4bd5c, #e3913f);
+}
+
+.stars {
+  background:
+    radial-gradient(60% 50% at 6% 4%,   rgba(22, 150, 160, 0.50), transparent 74%),
+    radial-gradient(55% 45% at 96% 96%, rgba(46, 84, 170, 0.50),  transparent 74%),
+    radial-gradient(45% 38% at 94% 8%,  rgba(210, 130, 56, 0.26), transparent 74%),
+    radial-gradient(45% 38% at 6% 94%,  rgba(30, 120, 110, 0.30), transparent 74%),
+    #070b12;
+}
+:root[data-theme="light"] .stars {
+  background:
+    radial-gradient(60% 50% at 6% 4%,   rgba(130, 214, 214, 0.75), transparent 74%),
+    radial-gradient(55% 45% at 96% 96%, rgba(150, 185, 235, 0.75), transparent 74%),
+    radial-gradient(45% 38% at 94% 8%,  rgba(245, 205, 150, 0.65), transparent 74%),
+    #eef2f4;
+}
+
+/* accents */
+.card-day-rel, .card-offset { color: var(--accent-teal); }
+.card-diff.ahead { color: var(--accent-teal); background: rgba(102, 214, 203, 0.14); }
+.card-diff.behind { color: #f4c47c; background: rgba(242, 178, 77, 0.15); }
+.sky-icon.day { color: #ffcb62; background: rgba(255, 203, 98, 0.18); }
+.sky-icon.night { color: #a9bcff; background: rgba(159, 180, 255, 0.18); }
+.pin-btn.on { color: var(--accent-gold); }
+.clock-card.is-pinned { box-shadow: inset 0 1px 0 rgba(255,255,255,0.32), 0 0 0 1px rgba(242,178,77,0.5), 0 16px 40px rgba(0,0,0,0.35); }
+.clock-card.is-local { box-shadow: inset 0 1px 0 rgba(255,255,255,0.32), 0 0 0 1px rgba(102,214,203,0.5), 0 16px 40px rgba(0,0,0,0.35); }
+
+/* gentler glass: a touch less white so it is easy on the eyes */
+.clock-card {
+  background: linear-gradient(145deg, rgba(255,255,255,0.13) 0%, rgba(255,255,255,0.045) 55%, rgba(255,255,255,0.07) 100%);
+  backdrop-filter: blur(28px) saturate(1.25) brightness(0.9);
+  -webkit-backdrop-filter: blur(28px) saturate(1.25) brightness(0.9);
+}
+.travel {
+  background: linear-gradient(145deg, rgba(255,255,255,0.12), rgba(255,255,255,0.045));
+  backdrop-filter: blur(28px) saturate(1.25) brightness(0.9);
+  -webkit-backdrop-filter: blur(28px) saturate(1.25) brightness(0.9);
+}
+
+/* amber buttons need dark text */
+.tab.active, .tab.active:hover { color: #1c1204; }
+.tab.active .tab-count { background: rgba(28, 18, 4, 0.16); }
+.tab-indicator { box-shadow: 0 6px 18px rgba(227, 145, 63, 0.35); }
+.btn-primary { color: #1c1204; }
+.fab { color: #1c1204; box-shadow: 0 12px 30px rgba(227, 145, 63, 0.4); }
+.travel-toggle.active { border-color: var(--accent-gold); color: var(--accent-gold); }
+
+
+/* ---- Dimmer cards ---- */
+.clock-card {
+  background: linear-gradient(145deg, rgba(255,255,255,0.075) 0%, rgba(255,255,255,0.025) 55%, rgba(255,255,255,0.04) 100%);
+  backdrop-filter: blur(28px) saturate(1.2) brightness(0.78);
+  -webkit-backdrop-filter: blur(28px) saturate(1.2) brightness(0.78);
+}
+.clock-card::before { background: linear-gradient(118deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 26%, rgba(255,255,255,0) 48%); }
+.travel { background: linear-gradient(145deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03)); }
+:root[data-theme="light"] .clock-card { background: linear-gradient(145deg, rgba(255,255,255,0.6), rgba(255,255,255,0.3)); backdrop-filter: blur(28px) saturate(1.2); -webkit-backdrop-filter: blur(28px) saturate(1.2); }
+
+/* ---- Clearer day/night bar ---- */
+.card-sky {
+  height: 9px;
+  opacity: 1;
+  background: linear-gradient(90deg, #1b2a6b 0%, #f08a5d 25%, #4aa8ff 50%, #f2a24a 75%, #1b2a6b 100%);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.25);
+}
+.card-sky-marker {
+  top: 50%;
+  width: 15px; height: 15px;
+  background: #fff;
+  border: 2px solid rgba(10, 12, 24, 0.55);
+  box-shadow: 0 0 10px 3px rgba(255, 255, 255, 0.75);
+  transform: translate(-50%, -50%);
+}
+.card-top { margin-top: 14px; }
+
+/* ---- Bigger, brighter sun & moon ---- */
+.sky-icon { width: 40px; height: 40px; }
+.sky-icon svg { width: 24px; height: 24px; }
+.sky-icon.day {
+  color: #ffd66e;
+  background: rgba(255, 205, 90, 0.26);
+  box-shadow: inset 0 0 0 1.5px rgba(255, 205, 90, 0.6), 0 0 16px rgba(255, 205, 90, 0.45);
+}
+.sky-icon.night {
+  color: #d6e2ff;
+  background: rgba(150, 175, 255, 0.26);
+  box-shadow: inset 0 0 0 1.5px rgba(170, 190, 255, 0.6), 0 0 16px rgba(150, 175, 255, 0.4);
+}
+:root[data-theme="light"] .sky-icon.day { color: #a86500; background: rgba(255, 190, 60, 0.4); }
+:root[data-theme="light"] .sky-icon.night { color: #34469e; background: rgba(110, 135, 230, 0.3); }
+
+
+/* ---- Softer glow & colours on the sky bar and sun/moon ---- */
+.card-sky {
+  height: 7px;
+  opacity: 0.9;
+  background: linear-gradient(90deg, #26356f 0%, #d79373 25%, #6aa3dc 50%, #d9a468 75%, #26356f 100%);
+  box-shadow: none;
+}
+.card-sky-marker {
+  width: 13px; height: 13px;
+  background: #f1ece4;
+  border: 2px solid rgba(12, 16, 30, 0.45);
+  box-shadow: 0 0 5px 1px rgba(255, 255, 255, 0.28);
+}
+.sky-icon.day {
+  color: #f1d08a;
+  background: rgba(241, 208, 138, 0.15);
+  box-shadow: inset 0 0 0 1px rgba(241, 208, 138, 0.32);
+}
+.sky-icon.night {
+  color: #c4d0ee;
+  background: rgba(160, 180, 230, 0.15);
+  box-shadow: inset 0 0 0 1px rgba(180, 196, 236, 0.30);
+}
+:root[data-theme="light"] .sky-icon.day { box-shadow: inset 0 0 0 1px rgba(168, 101, 0, 0.3); }
+:root[data-theme="light"] .sky-icon.night { box-shadow: inset 0 0 0 1px rgba(52, 70, 158, 0.3); }
+
+
+/* ---- Phone fixes: header on two rows so the city name always has room ---- */
+.card-top { flex-wrap: wrap; row-gap: 10px; margin-top: 10px; }
+.sky-icon { order: 1; width: 36px; height: 36px; }
+.sky-icon svg { width: 22px; height: 22px; }
+.card-actions, .card-top > .card-pin { order: 2; margin-left: auto; }
+.card-label-group { order: 3; flex: 1 1 100%; }
+
+/* day/night bar: inset so the rounded corners no longer cut it off */
+.card-sky { top: 14px; left: 22px; right: 22px; height: 6px; border-radius: 999px; }
+
+/* ---- Smooth digit changes ---- */
+.card-time .tm, .card-time .ts { display: inline-block; }
+.dg { display: inline-block; }
+.dg.ra { animation: digitA 0.38s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.dg.rb { animation: digitB 0.38s cubic-bezier(0.2, 0.8, 0.2, 1); }
+@keyframes digitA { from { opacity: 0; transform: translateY(45%); } to { opacity: 1; transform: none; } }
+@keyframes digitB { from { opacity: 0; transform: translateY(45%); } to { opacity: 1; transform: none; } }
+
+
+/* ============ PHONE MODE ONLY (screens up to 600px wide) ============
+   Square cards, no dial, icon left / pin or "This device" centre / menu right. */
+@media (max-width: 600px) {
+  .clock-card { aspect-ratio: 1 / 1; display: flex; flex-direction: column; }
+
+  .card-top {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    grid-template-areas: "icon mid end" "label label label";
+    align-items: center;
+    gap: 8px;
+    row-gap: 14px;
+    margin-top: 10px;
+  }
+  .card-top .sky-icon { grid-area: icon; order: 0; justify-self: start; width: 38px; height: 38px; }
+  .card-actions { display: contents; }
+  .card-top > .card-pin { grid-area: mid; justify-self: center; order: 0; margin: 0; font-size: 10px; padding: 4px 10px; }
+  .pin-btn {
+    grid-area: mid; justify-self: center;
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.07);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+  }
+  .pin-btn.on { background: rgba(242, 178, 77, 0.16); box-shadow: inset 0 0 0 1px rgba(242, 178, 77, 0.45); }
+  .card-more {
+    grid-area: end; justify-self: end;
+    width: 38px; height: 38px;
+    padding: 0 0 6px;
+    display: grid; place-items: center;
+    border-radius: 50%;
+    font-size: 20px; line-height: 1;
+    color: var(--ink);
+    background: rgba(255, 255, 255, 0.07);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+  }
+  .card-label-group { grid-area: label; order: 0; flex: none; width: 100%; }
+  .card-city { font-size: 18px; }
+
+  .dial-svg { display: none; }
+  .card-body { display: block; margin-top: auto; }
+  .card-digital { width: 100%; }
+}
+
+
+/* ---- Phone mode, part 2: nothing may be clipped; compact 2-column cards ---- */
+@media (max-width: 600px) {
+  .clock-card { min-height: min-content; }   /* stays square, but grows rather than cutting text off */
+  .drag-handle { display: none; }            /* drag-to-reorder needs a mouse */
+  .card-top > .card-pin { font-size: 9px; letter-spacing: 0.04em; padding: 3px 8px; white-space: nowrap; }
+}
+
+@media (min-width: 341px) and (max-width: 420px) {
+  .clock-card { padding: 12px 12px 12px; }
+  .card-sky { top: 9px; left: 16px; right: 16px; height: 5px; }
+  .card-sky-marker { width: 11px; height: 11px; }
+  .card-top { margin-top: 6px; row-gap: 6px; gap: 6px; }
+  .card-top .sky-icon, .pin-btn, .card-more { width: 30px; height: 30px; }
+  .sky-icon svg { width: 18px; height: 18px; }
+  .pin-btn svg { width: 15px; height: 15px; }
+  .card-more { font-size: 17px; padding-bottom: 5px; }
+  .card-city { font-size: 15px; line-height: 1.2; }
+  .card-day-rel { font-size: 9.5px; }
+  .card-time { font-size: 24px; }
+  .card-time .sec { font-size: 12px; }
+  .card-meta { font-size: 11px; margin-top: 3px; gap: 6px; }
+  .card-diff { font-size: 10px; padding: 2px 8px; margin-top: 5px; }
+}
+
+/* Hidden cards must stay hidden (the phone layout sets display:flex, which would override [hidden]) */
+.clock-card[hidden] { display: none !important; }

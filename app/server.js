@@ -140,10 +140,10 @@ function ensureDataFile() {
   if (!fs.existsSync(DATA_FILE)) {
     const defaults = {
       clocks: [
-        { id: crypto.randomUUID(), timeZone: 'America/New_York', label: 'New York', order: 0 },
-        { id: crypto.randomUUID(), timeZone: 'Europe/London', label: 'London', order: 1 },
-        { id: crypto.randomUUID(), timeZone: 'Asia/Dhaka', label: 'Dhaka', order: 2 },
-        { id: crypto.randomUUID(), timeZone: 'Asia/Tokyo', label: 'Tokyo', order: 3 }
+        { id: crypto.randomUUID(), timeZone: 'America/New_York', label: 'New York', pinned: true, order: 0 },
+        { id: crypto.randomUUID(), timeZone: 'Europe/London', label: 'London', pinned: true, order: 1 },
+        { id: crypto.randomUUID(), timeZone: 'Asia/Dhaka', label: 'Dhaka', pinned: true, order: 2 },
+        { id: crypto.randomUUID(), timeZone: 'Asia/Tokyo', label: 'Tokyo', pinned: true, order: 3 }
       ]
     };
     fs.writeFileSync(DATA_FILE, JSON.stringify(defaults, null, 2));
@@ -222,6 +222,16 @@ function serveStatic(req, res, pathname) {
   });
 }
 
+let COUNTRY_BY_TZ = {};
+try { COUNTRY_BY_TZ = JSON.parse(fs.readFileSync(path.join(__dirname, 'tz-countries.json'), 'utf-8')); } catch (e) { /* search by country just won't work */ }
+let regionNames = null;
+try { regionNames = new Intl.DisplayNames(['en'], { type: 'region' }); } catch (e) { /* noop */ }
+function countryName(tz) {
+  const cc = COUNTRY_BY_TZ[tz];
+  if (!cc) return '';
+  try { return (regionNames && regionNames.of(cc)) || cc; } catch (e) { return cc; }
+}
+
 let cachedZones = null;
 function getTimeZones() {
   if (cachedZones) return cachedZones;
@@ -238,7 +248,7 @@ function getTimeZones() {
       const off = parts.find(p => p.type === 'timeZoneName');
       offsetLabel = off ? off.value : '';
     } catch (e) { /* noop */ }
-    return { timeZone: tz, offset: offsetLabel };
+    return { timeZone: tz, offset: offsetLabel, country: countryName(tz), region: tz.includes('/') ? tz.split('/')[0] : '' };
   });
   return cachedZones;
 }
@@ -322,6 +332,7 @@ const server = http.createServer(async (req, res) => {
         id: crypto.randomUUID(),
         timeZone: body.timeZone,
         label: body.label || body.timeZone.split('/').pop().replace(/_/g, ' '),
+        pinned: !!body.pinned,
         order: data.clocks.length
       };
       data.clocks.push(clock);
@@ -341,6 +352,7 @@ const server = http.createServer(async (req, res) => {
           id: crypto.randomUUID(),
           timeZone,
           label: timeZone.split('/').pop().replace(/_/g, ' '),
+          pinned: false,
           order: data.clocks.length
         };
         data.clocks.push(clock);
@@ -383,7 +395,8 @@ const server = http.createServer(async (req, res) => {
         data.clocks[idx] = {
           ...data.clocks[idx],
           label: body.label ?? data.clocks[idx].label,
-          timeZone: body.timeZone ?? data.clocks[idx].timeZone
+          timeZone: body.timeZone ?? data.clocks[idx].timeZone,
+          pinned: typeof body.pinned === 'boolean' ? body.pinned : !!data.clocks[idx].pinned
         };
         writeData(data);
         return sendJson(res, 200, data.clocks[idx]);

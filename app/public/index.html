@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <title>World Clock</title>
 <meta name="description" content="Time in every city that matters to you, synced from multiple time servers." />
-<meta name="theme-color" content="#0b0e1f" />
+<meta name="theme-color" content="#150d1a" />
 <link rel="manifest" href="manifest.webmanifest" />
 <link rel="icon" href="icons/icon-192.png" />
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
@@ -16,7 +16,7 @@
 <script>
   (function () {
     try {
-      var saved = localStorage.getItem('wc-theme');
+      var saved = localStorage.getItem('wc-theme-v2');
       if (saved === 'light' || saved === 'dark') {
         document.documentElement.setAttribute('data-theme', saved);
       }
@@ -25,6 +25,9 @@
 </script>
 </head>
 <body>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+    <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 17v5M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  </defs></svg>
   <div class="stars" id="stars" aria-hidden="true"></div>
 
   <div class="app" id="app">
@@ -61,20 +64,60 @@
       </div>
     </header>
 
-    <div class="grid-search">
-      <svg class="grid-search-icon" viewBox="0 0 24 24" aria-hidden="true">
-        <circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/>
-        <line x1="16.2" y1="16.2" x2="21" y2="21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-      </svg>
-      <input type="search" id="gridSearch" placeholder="Search your clocks…" autocomplete="off" aria-label="Search your clocks" />
-      <button class="grid-search-clear" id="gridSearchClear" type="button" aria-label="Clear search" hidden>✕</button>
+    <nav class="tabs" role="tablist" aria-label="Clock views">
+      <button class="tab" id="tabPinned" role="tab" data-tab="pinned" type="button">
+        <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><use href="#i-pin"/></svg>
+        Pinned <span class="tab-count" id="countPinned">0</span>
+      </button>
+      <button class="tab" id="tabAll" role="tab" data-tab="all" type="button">
+        All clocks <span class="tab-count" id="countAll">0</span>
+      </button>
+    </nav>
+
+    <div class="search-row">
+      <div class="grid-search">
+        <svg class="grid-search-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/>
+          <line x1="16.2" y1="16.2" x2="21" y2="21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <input type="search" id="gridSearch" placeholder="Search city or country…" autocomplete="off" aria-label="Search clocks" />
+        <button class="grid-search-clear" id="gridSearchClear" type="button" aria-label="Clear search" hidden>✕</button>
+      </div>
+      <button class="travel-toggle" id="travelToggle" type="button" aria-expanded="false" aria-controls="travelPanel">
+        <svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3.5 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <span id="travelToggleText">Time travel</span>
+      </button>
     </div>
+
+    <section class="travel" id="travelPanel" hidden aria-label="Time travel">
+      <div class="travel-head">
+        <div>
+          <div class="travel-readout" id="travelReadout">Now</div>
+          <div class="travel-sub" id="travelSub">Drag the slider to see every clock at another moment</div>
+        </div>
+        <button class="btn-ghost travel-reset" id="travelReset" type="button">Back to now</button>
+      </div>
+      <input type="range" id="travelSlider" min="-1440" max="2880" step="15" value="0" aria-label="Move time forward or backward" />
+      <div class="travel-scale" aria-hidden="true">
+        <span style="left:0;transform:none">−24h</span>
+        <span style="left:33.333%">Now</span>
+        <span style="left:66.667%">+24h</span>
+        <span style="left:100%;transform:translateX(-100%)">+48h</span>
+      </div>
+      <div class="travel-steps">
+        <button type="button" data-step="-60">−1h</button>
+        <button type="button" data-step="-15">−15m</button>
+        <button type="button" data-step="15">+15m</button>
+        <button type="button" data-step="60">+1h</button>
+      </div>
+    </section>
 
     <main class="clock-grid" id="clockGrid" aria-live="polite"></main>
 
     <div class="empty-state" id="emptyState" hidden>
       <p id="emptyStateTitle">No clocks yet</p>
       <span id="emptyStateSub">Tap the + button to add a city</span>
+      <button class="btn-ghost" id="emptyAction" type="button" hidden>Browse all clocks</button>
     </div>
 
     <button class="fab" id="addBtn" title="Add a clock" aria-label="Add a clock">+</button>

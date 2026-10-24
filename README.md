@@ -8,6 +8,7 @@ A self-hosted world clock — add any city, see its time update live, all synced
 world-clock/
 ├── app/                  ← the app itself, goes in ZimaOS's file manager
 │   ├── server.js
+│   ├── tz-countries.json   ← timezone → country table (powers country search)
 │   └── public/
 │       ├── index.html
 │       ├── styles.css
@@ -59,6 +60,13 @@ Visit `http://<your-zimaos-ip>:8089` from any device on your network — phone, 
 ## Installing it like an app on your phone
 
 Open that address in your phone's browser, then use **Add to Home Screen** (Safari) or **Install app** (Chrome). It'll get its own icon and open full-screen, no browser bar — a real app on your home screen, backed by your own server.
+
+## Pins, tabs, search and time travel
+
+- **Two tabs:** *Pinned* (the clocks you care about) and *All clocks*. Tap the 📌 on any card to pin or unpin it. Pins are saved on the server, so every device sees the same ones. The app reopens on the tab you used last. Adding a clock while on the Pinned tab pins it automatically.
+- **Search** works on both tabs and matches city name, your own label, country, region and UTC offset (try `japan`, `asia`, or `+6`). The Add-a-clock sheet searches countries too.
+- **Time travel:** tap the *Time travel* button and drag the slider (from 24 hours back to 48 hours ahead) to see what time it is in every city at that moment. Tap *Back to now* to return to live time.
+- Each card shows how far ahead or behind your device it is, and a sun or moon for day or night there (6:00 to 18:00 counts as day).
 
 ## How the time sync works
 
